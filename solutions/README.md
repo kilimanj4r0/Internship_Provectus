@@ -1,5 +1,7 @@
 ### Prerequisites
-* pandas=1.3.3
+```shell
+pip install -r requirements.txt
+```
 
 ## Level 1
 
