@@ -117,3 +117,20 @@ def find_target_index(num_list, target, left=0, right=None):
     else:
         return mid
 ```
+
+### Linux Shell
+1. List processes listening on ports 80 and 443
+```shell
+lsof -i :80
+lsof -i :443
+```
+2. List process environment variables by given PID
+```shell
+cat /proc/<PID>/environ
+```
+3. Launch a python program `my_program.py` through CLI in the background. How would you close it after some period of time?
+```shell
+python my_program.py &
+# output will be something like: [number of process] PID (e.g. [1] 777)
+KILL PID
+```
