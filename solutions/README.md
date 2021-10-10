@@ -1,4 +1,5 @@
 ### Prerequisites
+Install the requirements using shell
 ```shell
 pip install -r requirements.txt
 ```
