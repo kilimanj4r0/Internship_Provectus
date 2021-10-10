@@ -48,55 +48,25 @@ source data directory.
 Note that it was tested in `MySQL`.
 1. Rewritten SQL query
 ```sql
- SELECT user_id AS id
- FROM departments
- WHERE department_id != 1
-```
-```sql
-SELECT id
-FROM users
-WHERE id NOT IN (
-	SELECT user_id
-	FROM departments
-	WHERE department_id = 1
-);
+ SELECT u.id
+ FROM user AS u
+ LEFT JOIN departments AS d ON d.user_id = u.id
+ WHERE d.department_id != 1 OR d.department_id IS NULL;
 ```
 2. The SQL query to find all duplicate lastnames in a table named **user**
 ```sql
 SELECT lastname
 FROM user
 GROUP BY lastname
-HAVING COUNT(lastname) > 1
-```
-```text
-+----+-----------+-----------
-| id | firstname | lastname |
-+----+-----------+-----------
-| 1  | Ivan      | Sidorov  |
-| 2  | Alexandr  | Ivanov   |
-| 3  | Petr      | Petrov   |
-| 4  | Stepan    | Ivanov   |
-+----+-----------+----------+
+HAVING COUNT(lastname) > 1;
 ```
 3. Write a SQL query to get a username from the **user** table with the second highest salary from **salary** tables. Show the username and it's salary in the result.
 ```sql
 SELECT u.username, s.salary
 FROM user AS u
-JOIN (SELECT DISTINCT user_id, salary
-      FROM salary
-      ORDER BY salary DESC
-      LIMIT 1, 1) AS s
-ON u.id = s.user_id
-```
-```sql
-+---------+--------+
-| user_id | salary |
-+----+--------+----+
-| 1       | 1000   |
-| 2       | 1100   |
-| 3       | 900    |
-| 4       | 1200   |
-+---------+--------+
+INNER JOIN salary AS s ON s.user_id = u.id
+ORDER BY s.salary DESC 
+LIMIT 1, 1;
 ```
 
 ### Algorithms and Data Structures
