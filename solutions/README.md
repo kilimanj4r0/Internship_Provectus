@@ -41,3 +41,109 @@ We
 
 Note that duplicates will always be overwritten since the script makes the `output.csv` file based on the files of
 source data directory.
+
+# Solutions to Code Tasks
+
+### SQL
+Note that it was tested in `MySQL`.
+1. Rewritten SQL query
+```sql
+ SELECT user_id AS id
+ FROM departments
+ WHERE department_id != 1
+```
+```sql
+SELECT id
+FROM users
+WHERE id NOT IN (
+	SELECT user_id
+	FROM departments
+	WHERE department_id = 1
+);
+```
+2. The SQL query to find all duplicate lastnames in a table named **user**
+```sql
+SELECT lastname
+FROM user
+GROUP BY lastname
+HAVING COUNT(lastname) > 1
+```
+```text
++----+-----------+-----------
+| id | firstname | lastname |
++----+-----------+-----------
+| 1  | Ivan      | Sidorov  |
+| 2  | Alexandr  | Ivanov   |
+| 3  | Petr      | Petrov   |
+| 4  | Stepan    | Ivanov   |
++----+-----------+----------+
+```
+3. Write a SQL query to get a username from the **user** table with the second highest salary from **salary** tables. Show the username and it's salary in the result.
+```sql
+SELECT u.username, s.salary
+FROM user AS u
+JOIN (SELECT DISTINCT user_id, salary
+      FROM salary
+      ORDER BY salary DESC
+      LIMIT 1, 1) AS s
+ON u.id = s.user_id
+```
+```sql
++---------+--------+
+| user_id | salary |
++----+--------+----+
+| 1       | 1000   |
+| 2       | 1100   |
+| 3       | 900    |
+| 4       | 1200   |
++---------+--------+
+```
+
+### Algorithms and Data Structures
+1. Optimised Python code snippet has the `O(n + k)` time complexity due to using dictionary for searching (it is a 
+   hashmap, so average time complexity is `O(1)`). The given Python code snippet has `O(nk)` time complexity. 
+```python
+def count_connections(list1: list, list2: list) -> int:
+    count = 0
+    ddict = {}
+    for el in list1:  # O(len(list1))
+        if el not in ddict:  # O(1)
+            ddict[el] = 0
+        ddict[el] += 1
+    for el in list2:  # O(len(list2))
+        if el in ddict:  # O(1)
+            count += 1
+    return count
+```
+2. The idea is in using dictionary (because of average `O(1)` time complexity for searching) to keep unique elements
+and in using `start` and `final` pointers. To detect the maximum length we always should check the difference between
+`start` and `final`. Therefore, iterating through the given string, we get that time complexity is `O(n)`, while 
+the space complexity is `O(k)` because in worst case we will store in dictionary all unique elements (`k = len(set(s))`)
+```python
+def find_longest_substring(s):
+    ddict = {}  # {char: index}
+    max_length = 0
+    start = 0
+    for final in range(len(s)):  # O(len(s))
+        if s[final] in ddict:  # O(1)
+            start = max(ddict[s[final]] + 1, start)  # O(1)
+        ddict[s[final]] = final 
+        max_length = max(max_length, final + 1 - start) # O(1)
+    return max_length
+```
+3. For effective searching for target value in sorted array we usually use the binary search. It provides `O(log n)`
+average time complexity.
+```python
+def find_target_index(num_list, target, left=0, right=None):
+    if right is None:
+        right = len(num_list) - 1
+    mid = (left + right) // 2
+    if left > right:
+        return left
+    if target > num_list[mid]:
+        return find_target_index(num_list, target, mid + 1, right)
+    elif target < num_list[mid]:
+        return find_target_index(num_list, target, left, mid - 1)
+    else:
+        return mid
+```
