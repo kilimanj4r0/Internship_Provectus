@@ -104,18 +104,18 @@ def find_longest_substring(s):
 3. For effective searching for target value in sorted array we usually use the binary search. It provides `O(log n)`
 average time complexity.
 ```python
-def find_target_index(num_list, target, left=0, right=None):
-    if right is None:
-        right = len(num_list) - 1
-    mid = (left + right) // 2
-    if left > right:
-        return left
-    if target > num_list[mid]:
-        return find_target_index(num_list, target, mid + 1, right)
-    elif target < num_list[mid]:
-        return find_target_index(num_list, target, left, mid - 1)
-    else:
-        return mid
+def find_target_index(num_list, target):
+    right = len(num_list) - 1
+    left = 0
+    while left <= right:
+        mid = (left + right) // 2
+        if target > num_list[mid]:
+            left = mid + 1
+        elif target < num_list[mid]:
+            right = mid - 1
+        else:
+            return mid
+    return left
 ```
 
 ### Linux Shell
@@ -132,5 +132,5 @@ cat /proc/<PID>/environ
 ```shell
 python my_program.py &
 # output will be something like: [number of process] PID (e.g. [1] 777)
-KILL PID
+kill PID
 ```
